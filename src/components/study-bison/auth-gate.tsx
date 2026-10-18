@@ -1,0 +1,90 @@
+"use client";
+
+import { useEffect, useState, type ReactNode } from "react";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { LogIn, Loader2, ShieldCheck, UserRound } from "lucide-react";
+import { finishGoogleRedirect, firebaseAuth, signInWithGoogle } from "@/lib/firebase";
+import { GlassButton } from "./glass";
+
+export function AuthGate({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [checking, setChecking] = useState(true);
+  const [signingIn, setSigningIn] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [guest, setGuest] = useState(false);
+
+  useEffect(() => {
+    const savedGuest = window.sessionStorage.getItem("quantica-guest") === "true";
+    setGuest(savedGuest);
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (nextUser) => {
+      setUser(nextUser);
+      if (nextUser) {
+        window.sessionStorage.removeItem("quantica-guest");
+        setGuest(false);
+      }
+      setChecking(false);
+    });
+    finishGoogleRedirect().catch((reason: unknown) => setError(getSignInMessage(reason)));
+    return unsubscribe;
+  }, []);
+
+  const continueAsGuest = () => {
+    window.sessionStorage.setItem("quantica-guest", "true");
+    setGuest(true);
+  };
+
+  const login = async () => {
+    setSigningIn(true);
+    setError(null);
+    try {
+      await signInWithGoogle();
+    } catch (reason: unknown) {
+      setError(getSignInMessage(reason));
+    } finally {
+      setSigningIn(false);
+    }
+  };
+
+  if (checking) {
+    return (
+      <main className="fixed inset-0 flex items-center justify-center bg-[#07070b]">
+        <Loader2 className="animate-spin text-[#f5b52e]" size={30} />
+      </main>
+    );
+  }
+
+  if (!user && !guest) {
+    return (
+      <main className="fixed inset-0 flex items-center justify-center overflow-y-auto bg-[#07070b] p-5">
+        <section className="glass w-full max-w-md rounded-[2rem] p-8 text-center sm:p-10 sb-fade-up">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-[#f5b52e]/30 bg-[#f5b52e]/10 text-[#f5b52e] shadow-[0_0_35px_rgba(245,181,46,0.18)]">
+            <ShieldCheck size={30} />
+          </div>
+          <p className="mt-6 text-xs font-bold uppercase tracking-[0.24em] text-[#f5b52e]">Quantica Digital</p>
+          <h1 className="mt-3 text-3xl font-extrabold tracking-tight">Your learning space</h1>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">Sign in with Google to save your enrollments, continue lectures, and compete on the leaderboard.</p>
+          <GlassButton variant="gold" size="lg" className="mt-8 w-full" onClick={login} disabled={signingIn}>
+            {signingIn ? <Loader2 className="animate-spin" size={18} /> : <LogIn size={18} />}
+            {signingIn ? "Signing in..." : "Continue with Google"}
+          </GlassButton>
+          <button type="button" onClick={continueAsGuest} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">
+            <UserRound size={16} /> Continue as a guest
+          </button>
+          <p className="mt-3 text-xs leading-5 text-muted-foreground/75">Guest mode lets you browse and watch. Sign in later to save enrollments and leaderboard progress.</p>
+          {error && <p className="mt-4 text-sm text-red-300">{error}</p>}
+        </section>
+      </main>
+    );
+  }
+
+  return <>{children}</>;
+}
+
+function getSignInMessage(reason: unknown): string {
+  const code = (reason as { code?: string }).code;
+  if (code === "auth/popup-closed-by-user") return "The Google sign-in window was closed before sign-in finished. Please try again.";
+  if (code === "auth/unauthorized-domain") return "This app address is not enabled for Google sign-in yet. Add the current website address to Firebase Authorized domains.";
+  if (code === "auth/operation-not-allowed") return "Google sign-in is not enabled in the Firebase Authentication settings yet.";
+  if (code === "auth/network-request-failed") return "Google sign-in needs an active internet connection. Please try again.";
+  return "Google sign-in could not be completed. Please try again.";
+}
