@@ -83,7 +83,7 @@ export function GlassBadge({
         tone === "neutral" &&
           "border-white/15 bg-white/5 text-foreground/80 backdrop-blur-md",
         tone === "gold" &&
-          "border-[#f5b52e]/40 bg-[#f5b52e]/12 text-[#f8d477] backdrop-blur-md",
+          "border-[#4a9eff]/40 bg-[#4a9eff]/12 text-[#7cc0ff] backdrop-blur-md",
         tone === "green" &&
           "border-emerald-400/30 bg-emerald-400/10 text-emerald-300 backdrop-blur-md",
         tone === "red" && "border-red-400/30 bg-red-400/10 text-red-300 backdrop-blur-md",
@@ -119,7 +119,7 @@ export function SectionHeading({
   return (
     <div className={cn("space-y-2", className)}>
       {eyebrow && (
-        <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f5b52e]/90">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#4a9eff]/90">
           {eyebrow}
         </p>
       )}
@@ -137,7 +137,7 @@ export function SafeImage({
   src,
   alt,
   className,
-  fallback = "/logo-256.png",
+  fallback = "/logo.png",
 }: {
   src?: string;
   alt: string;
@@ -174,7 +174,7 @@ export function EmptyState({
   return (
     <div className="glass-soft rounded-3xl px-8 py-14 text-center">
       {icon && (
-        <div className="mx-auto mb-4 w-14 h-14 rounded-2xl glass flex items-center justify-center text-[#f5b52e]">
+        <div className="mx-auto mb-4 w-14 h-14 rounded-2xl glass flex items-center justify-center text-[#4a9eff]">
           {icon}
         </div>
       )}

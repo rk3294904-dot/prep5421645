@@ -1,5 +1,12 @@
 import { getApps, initializeApp } from "firebase/app";
-import { getAuth, getRedirectResult, GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  signOut,
+} from "firebase/auth";
 import {
   collection,
   doc,
@@ -30,8 +37,28 @@ export const firebaseDb = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 
-export function signInWithGoogle() {
-  return signInWithRedirect(firebaseAuth, googleProvider);
+/**
+ * Sign in with Google using a popup. Falls back to a redirect when the popup
+ * is blocked or cannot be opened (mobile browsers, cross-origin iframes, etc.)
+ * so the user is never left stuck after the popup closes unexpectedly.
+ */
+export async function signInWithGoogle() {
+  try {
+    await signInWithPopup(firebaseAuth, googleProvider);
+  } catch (reason: unknown) {
+    const code = (reason as { code?: string }).code;
+    // Popup blocked / unavailable -> use redirect as a graceful fallback.
+    if (
+      code === "auth/popup-blocked" ||
+      code === "auth/popup-closed-by-user" ||
+      code === "auth/cancelled-popup-request" ||
+      code === "auth/operation-not-supported-in-this-environment"
+    ) {
+      await signInWithRedirect(firebaseAuth, googleProvider);
+      return;
+    }
+    throw reason;
+  }
 }
 
 export function finishGoogleRedirect() {

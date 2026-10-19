@@ -22,7 +22,7 @@ export function AboutView() {
         {/* hero */}
         <GlassCard hover={false} className="p-8 sm:p-14 sb-fade-up">
           <div className="flex flex-col lg:flex-row items-center gap-10">
-            <div className="w-44 h-44 sm:w-56 sm:h-56 rounded-[2.5rem] overflow-hidden border border-white/15 bg-black shadow-[0_0_80px_rgba(245,181,46,0.3)] shrink-0">
+            <div className="w-44 h-44 sm:w-56 sm:h-56 rounded-[2.5rem] overflow-hidden border border-white/15 bg-black shadow-[0_0_80px_rgba(74,158,255,0.3)] shrink-0">
               { }
               <img src="/logo.png" alt="Study Bison" className="w-full h-full object-cover" />
             </div>
@@ -95,7 +95,7 @@ export function AboutView() {
 function ValueCard({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
   return (
     <GlassCard className="p-7">
-      <div className="w-12 h-12 rounded-2xl btn-glass flex items-center justify-center text-[#f5b52e]">{icon}</div>
+      <div className="w-12 h-12 rounded-2xl btn-glass flex items-center justify-center text-[#4a9eff]">{icon}</div>
       <h3 className="mt-4 font-bold">{title}</h3>
       <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{text}</p>
     </GlassCard>
@@ -108,7 +108,7 @@ function StepCard({ n, icon, title, text }: { n: number; icon: React.ReactNode; 
       <span className="absolute -top-3 -right-1 text-[88px] font-extrabold text-white/4 leading-none select-none">
         {n}
       </span>
-      <div className="w-11 h-11 rounded-2xl btn-glass flex items-center justify-center text-[#f5b52e]">{icon}</div>
+      <div className="w-11 h-11 rounded-2xl btn-glass flex items-center justify-center text-[#4a9eff]">{icon}</div>
       <h3 className="mt-3.5 font-bold text-[15px]">{title}</h3>
       <p className="mt-1 text-[13px] text-muted-foreground leading-relaxed">{text}</p>
     </GlassCard>

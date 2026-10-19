@@ -81,12 +81,12 @@ export function SubjectView({
             <ArrowLeft size={14} /> Back
           </GlassButton>
           <nav className="flex items-center gap-1.5 flex-wrap" aria-label="Breadcrumb">
-            <button className="hover:text-[#f8d477] cursor-pointer flex items-center gap-1" onClick={() => navigate({ view: "home" })}>
+            <button className="hover:text-[#7cc0ff] cursor-pointer flex items-center gap-1" onClick={() => navigate({ view: "home" })}>
               <Home size={12} /> Home
             </button>
             <ChevronRight size={12} />
             <button
-              className="hover:text-[#f8d477] cursor-pointer line-clamp-1 max-w-[180px]"
+              className="hover:text-[#7cc0ff] cursor-pointer line-clamp-1 max-w-[180px]"
               onClick={() => navigate({ view: "batch", batchId })}
             >
               {useApp.getState().batchName ?? "Batch"}
@@ -111,7 +111,7 @@ export function SubjectView({
               )}
             </div>
             <div className="flex items-center glass-soft rounded-full px-4 w-full sm:w-80">
-              <Search size={15} className="text-[#f5b52e] shrink-0" />
+              <Search size={15} className="text-[#4a9eff] shrink-0" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -152,7 +152,7 @@ export function SubjectView({
                   }
                 >
                   <div className="flex items-start gap-3">
-                    <span className="w-9 h-9 rounded-xl btn-glass flex items-center justify-center text-xs font-extrabold text-[#f8d477] shrink-0">
+                    <span className="w-9 h-9 rounded-xl btn-glass flex items-center justify-center text-xs font-extrabold text-[#7cc0ff] shrink-0">
                       {i + 1}
                     </span>
                     <div className="min-w-0 flex-1">

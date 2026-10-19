@@ -158,16 +158,16 @@ function TopicData({
             <ArrowLeft size={14} /> Back
           </GlassButton>
           <nav className="flex items-center gap-1.5 flex-wrap" aria-label="Breadcrumb">
-            <button className="hover:text-[#f8d477] cursor-pointer flex items-center gap-1" onClick={() => navigate({ view: "home" })}>
+            <button className="hover:text-[#7cc0ff] cursor-pointer flex items-center gap-1" onClick={() => navigate({ view: "home" })}>
               <Home size={12} /> Home
             </button>
             <ChevronRight size={12} />
-            <button className="hover:text-[#f8d477] cursor-pointer line-clamp-1 max-w-[160px]" onClick={() => navigate({ view: "batch", batchId })}>
+            <button className="hover:text-[#7cc0ff] cursor-pointer line-clamp-1 max-w-[160px]" onClick={() => navigate({ view: "batch", batchId })}>
               {appState.batchName ?? "Batch"}
             </button>
             <ChevronRight size={12} />
             <button
-              className="hover:text-[#f8d477] cursor-pointer line-clamp-1 max-w-[200px]"
+              className="hover:text-[#7cc0ff] cursor-pointer line-clamp-1 max-w-[200px]"
               onClick={() => navigate({ view: "subject", batchId, subjectSlug })}
             >
               {appState.subjectName ?? "Subject"}
@@ -196,7 +196,7 @@ function TopicData({
               </ModeTab>
             </div>
             <div className="flex items-center glass-soft rounded-full px-4 w-full sm:w-72">
-              <Search size={15} className="text-[#f5b52e] shrink-0" />
+              <Search size={15} className="text-[#4a9eff] shrink-0" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -289,11 +289,11 @@ function LectureList({
             >
               { }
               <img
-                src={l.thumbnail || "/logo-256.png"}
+                src={l.thumbnail || "/logo.png"}
                 alt=""
                 loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                onError={(e) => ((e.currentTarget.src = "/logo-256.png"))}
+                onError={(e) => ((e.currentTarget.src = "/logo.png"))}
               />
               <span className="absolute inset-0 bg-black/25 flex items-center justify-center">
                 {playing === l.id ? (
@@ -316,7 +316,7 @@ function LectureList({
                 {l.date ? ` · ${new Date(l.date).toLocaleDateString()}` : ""}
               </p>
               <h3
-                className="mt-1 font-bold text-sm leading-snug line-clamp-2 cursor-pointer hover:text-[#f8d477] transition-colors"
+                className="mt-1 font-bold text-sm leading-snug line-clamp-2 cursor-pointer hover:text-[#7cc0ff] transition-colors"
                 onClick={() => onPlay(l)}
               >
                 {l.title}
@@ -347,7 +347,7 @@ function NoteList({ items, loading }: { items: NoteItem[]; loading: boolean }) {
     <div className="space-y-3 sb-fade-up max-h-[70vh] overflow-y-auto sb-scroll pr-1">
       {items.map((n, i) => (
         <GlassCard key={n.id} className="px-4 py-3.5 flex items-center gap-4" hover sheen={false}>
-          <span className="w-10 h-10 rounded-xl glass-soft flex items-center justify-center text-[#f5b52e] shrink-0">
+          <span className="w-10 h-10 rounded-xl glass-soft flex items-center justify-center text-[#4a9eff] shrink-0">
             <FileText size={17} />
           </span>
           <div className="min-w-0 flex-1">

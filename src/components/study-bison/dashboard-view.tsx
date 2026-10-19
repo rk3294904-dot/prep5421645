@@ -176,7 +176,7 @@ function BatchCard({ batch, index, onOpen }: { batch: CatalogBatch; index: numbe
         </div>
       </button>
       <div className="grid grid-cols-2 gap-2 px-4 pb-3">
-        <button type="button" onClick={onOpen} className="flex h-9 items-center justify-center gap-1.5 rounded-lg border border-[#866b2d] bg-[#292a2a] text-[11px] font-bold text-[#f5c84c] transition-colors hover:bg-[#3a3425]">
+        <button type="button" onClick={onOpen} className="flex h-9 items-center justify-center gap-1.5 rounded-lg border border-[#22577d] bg-[#132e49] text-[11px] font-bold text-[#65c7f2] transition-colors hover:bg-[#173b5d]">
           <Bell size={13} /> Announcements
         </button>
         <button type="button" onClick={onOpen} className="flex h-9 items-center justify-center gap-1.5 rounded-lg border border-[#22577d] bg-[#132e49] text-[11px] font-bold text-[#65c7f2] transition-colors hover:bg-[#173b5d]">

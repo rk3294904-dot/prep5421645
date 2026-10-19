@@ -259,7 +259,7 @@ export const TTL = {
   topics: 10 * 60 * 1000, // chapters — 10 min
   contents: 5 * 60 * 1000, // lectures/notes — 5 min
   schedule: 10 * 60 * 1000, // single lecture detail — 10 min
-  misc: 5 * 60 * 1000, // announcements / tests / khazana
+  misc: 5 * 60 * 1000, // announcements / tests
 };
 
 // ---------------------------------------------------------------------------

@@ -17,13 +17,10 @@ import {
   CalendarDays,
   Megaphone,
   ClipboardList,
-  Gem,
-  MessageCircleHeart,
   Play,
   FileText,
   Radio,
   Clock,
-  Send,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -46,15 +43,13 @@ interface BatchInfo {
   feeTotal: number;
 }
 
-type TabKey = "subjects" | "today" | "announcements" | "tests" | "khazana" | "community";
+type TabKey = "subjects" | "today" | "announcements" | "tests";
 
 const TABS: { key: TabKey; label: string; icon: React.ReactNode }[] = [
   { key: "subjects", label: "Subjects & Modules", icon: <BookOpen size={14} /> },
   { key: "today", label: "Today's Classes", icon: <CalendarDays size={14} /> },
   { key: "announcements", label: "Announcements", icon: <Megaphone size={14} /> },
   { key: "tests", label: "Test Series", icon: <ClipboardList size={14} /> },
-  { key: "khazana", label: "Khazana", icon: <Gem size={14} /> },
-  { key: "community", label: "Community", icon: <MessageCircleHeart size={14} /> },
 ];
 
 export function BatchDetail({ batchId }: { batchId: string }) {
@@ -134,7 +129,7 @@ export function BatchDetail({ batchId }: { batchId: string }) {
                     {batch.name}
                   </h1>
                   <p className="mt-2 text-sm text-muted-foreground flex items-center gap-1.5">
-                    <Users2 size={14} className="text-[#f5b52e]" /> {batch.byName}
+                    <Users2 size={14} className="text-[#4a9eff]" /> {batch.byName}
                   </p>
                   <div className="mt-4 flex flex-wrap items-center gap-3">
                     <span className="text-2xl font-extrabold text-gold">
@@ -178,8 +173,6 @@ export function BatchDetail({ batchId }: { batchId: string }) {
         {tab === "today" && batch && <TodayTab batchId={batchId} batchName={batch.name} batchImage={batch.previewImage} />}
         {tab === "announcements" && <AnnouncementsTab batchId={batchId} />}
         {tab === "tests" && <TestsTab batchId={batchId} />}
-        {tab === "khazana" && <KhazanaTab batchId={batchId} />}
-        {tab === "community" && <CommunityTab />}
       </div>
     </main>
   );
@@ -229,7 +222,7 @@ function SubjectsTab({
           }
         >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl btn-glass flex items-center justify-center text-[#f5b52e] shrink-0">
+            <div className="w-12 h-12 rounded-2xl btn-glass flex items-center justify-center text-[#4a9eff] shrink-0">
               <BookOpen size={20} />
             </div>
             <div className="min-w-0 flex-1">
@@ -393,7 +386,7 @@ function AnnouncementsTab({ batchId }: { batchId: string }) {
                   rel="noreferrer"
                   className="inline-flex items-center gap-1.5 rounded-full btn-glass px-3.5 h-8 text-xs font-semibold"
                 >
-                  <FileText size={12} className="text-[#f5b52e]" /> {att.name}
+                  <FileText size={12} className="text-[#4a9eff]" /> {att.name}
                 </a>
               ))}
             </div>
@@ -458,130 +451,6 @@ function TestsTab({ batchId }: { batchId: string }) {
         </GlassCard>
       ))}
     </div>
-  );
-}
-
-/* ------------------------------ Khazana tab --------------------------------- */
-
-interface KhazanaGroup {
-  id: string;
-  name: string;
-  topics: {
-    id: string;
-    name: string;
-    videos: { id: string; name: string; videoId: string; thumbnail: string; duration: string }[];
-    notes: { id: string; name: string; url: string }[];
-  }[];
-}
-
-function KhazanaTab({ batchId }: { batchId: string }) {
-  const [groups, setGroups] = useState<KhazanaGroup[] | null>(null);
-  const [openId, setOpenId] = useState<string | null>(null);
-
-  useEffect(() => {
-    let alive = true;
-    fetch(`/api/batches/${batchId}/khazana`)
-      .then((r) => r.json())
-      .then((d) => alive && setGroups(d?.khazana ?? []))
-      .catch(() => alive && setGroups([]));
-    return () => {
-      alive = false;
-    };
-  }, [batchId]);
-
-  if (groups === null) {
-    return (
-      <div className="space-y-4">
-        {Array.from({ length: 3 }).map((_, i) => <GlassSkeleton key={i} className="h-20" />)}
-      </div>
-    );
-  }
-  if (groups.length === 0) {
-    return (
-      <EmptyState
-        icon={<Gem size={22} />}
-        title="Khazana is empty for this batch"
-        hint="Special treasure content appears here when published."
-      />
-    );
-  }
-  return (
-    <div className="space-y-4 sb-fade-up">
-      {groups.map((g) => (
-        <GlassCard key={g.id} hover={false} className="overflow-hidden">
-          <button
-            className="w-full flex items-center gap-3 p-5 text-left cursor-pointer"
-            onClick={() => setOpenId(openId === g.id ? null : g.id)}
-          >
-            <span className="w-11 h-11 rounded-2xl btn-gold flex items-center justify-center shrink-0">
-              <Gem size={18} />
-            </span>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-bold line-clamp-1">{g.name}</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">{g.topics.length} collections</p>
-            </div>
-          </button>
-          {openId === g.id && (
-            <div className="border-t border-white/8 p-5 space-y-4 max-h-[50vh] overflow-y-auto sb-scroll">
-              {g.topics.map((t) => (
-                <div key={t.id} className="glass-soft rounded-2xl p-4">
-                  <p className="font-semibold text-sm mb-3">{t.name}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {t.videos.map((v) => (
-                      <a
-                        key={v.id}
-                        href={v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : "#"}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full btn-glass px-3.5 h-8 text-xs font-semibold"
-                      >
-                        <Play size={11} className="text-[#f5b52e]" /> {v.name.slice(0, 40)}
-                      </a>
-                    ))}
-                    {t.notes.map((n) => (
-                      <a
-                        key={n.id}
-                        href={n.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full btn-glass px-3.5 h-8 text-xs font-semibold"
-                      >
-                        <FileText size={11} className="text-[#f5b52e]" /> {n.name.slice(0, 40)}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </GlassCard>
-      ))}
-    </div>
-  );
-}
-
-/* ----------------------------- Community tab -------------------------------- */
-
-function CommunityTab() {
-  return (
-    <GlassCard hover={false} className="p-8 sm:p-12 text-center sb-fade-up">
-      <div className="mx-auto w-16 h-16 rounded-3xl btn-glass flex items-center justify-center text-[#f5b52e]">
-        <MessageCircleHeart size={26} />
-      </div>
-      <h3 className="mt-5 text-xl font-extrabold">Join the Study Bison herd</h3>
-      <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
-        Ask doubts, share resources and stay motivated with thousands of learners in our
-        community groups.
-      </p>
-      <GlassButton
-        variant="gold"
-        size="lg"
-        className="mt-6"
-        onClick={() => window.open("https://t.me/studyvaultpro", "_blank")}
-      >
-        <Send size={16} /> Join Telegram Community
-      </GlassButton>
-    </GlassCard>
   );
 }
 

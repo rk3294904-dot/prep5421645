@@ -8,6 +8,7 @@ import { BatchDetail } from "@/components/study-bison/batch-detail";
 import { SubjectView } from "@/components/study-bison/subject-view";
 import { TopicView } from "@/components/study-bison/topic-view";
 import { WatchView } from "@/components/study-bison/player-view";
+import { LeaderboardView } from "@/components/study-bison/leaderboard-view";
 import { AuthGate } from "@/components/study-bison/auth-gate";
 
 export default function Page() {
@@ -26,6 +27,7 @@ export default function Page() {
       subject: `${s.subjectName ?? "Subject"} · Quantica Digital`,
       topic: `${s.topicName ?? "Chapter"} · Quantica Digital`,
       watch: `${s.lectureTitle ?? "Lecture"} · Quantica Digital`,
+      leaderboard: `Leaderboard · Quantica Digital`,
     };
     document.title = titles[view] ?? base;
   }, [view]);
@@ -34,7 +36,9 @@ export default function Page() {
     <AuthGate>
       <div className="flex flex-col min-h-screen">
         {view !== "watch" && <SiteHeader />}
-      {view === "batch" && batchId ? (
+      {view === "leaderboard" ? (
+        <LeaderboardView />
+      ) : view === "batch" && batchId ? (
         <BatchDetail key={batchId} batchId={batchId} />
       ) : view === "subject" && batchId && subjectSlug ? (
         <SubjectView

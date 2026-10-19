@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useApp } from "@/lib/store";
-import { firebaseAuth, enrollInBatch, getEnrolledBatchIds } from "@/lib/firebase";
+import { firebaseAuth, enrollInBatch, getEnrolledBatchIds, signInWithGoogle } from "@/lib/firebase";
 import { GlassBadge, GlassButton, GlassCard, GlassSkeleton, SafeImage, EmptyState } from "./glass";
 import { BookOpen, ChevronDown, Search, Trophy, Check, Loader2 } from "lucide-react";
 
@@ -64,12 +64,19 @@ export function HomeView() {
   }, []);
 
   const saveEnrollment = async (batch: CatalogBatch) => {
-    const user = firebaseAuth.currentUser;
-    if (!user || enrolledIds.has(batch._id)) return;
+    if (enrolledIds.has(batch._id)) return;
     setSavingId(batch._id);
     try {
+      let user = firebaseAuth.currentUser;
+      if (!user) {
+        await signInWithGoogle();
+        user = firebaseAuth.currentUser;
+      }
+      if (!user) return;
       await enrollInBatch({ userId: user.uid, batch: { id: batch._id, name: batch.name, image: batch.previewImage, byName: batch.byName } });
       setEnrolledIds((current) => new Set(current).add(batch._id));
+    } catch {
+      setError("Sign in is required to enroll in a batch.");
     } finally {
       setSavingId(null);
     }
@@ -96,7 +103,7 @@ export function HomeView() {
     <main className="flex-1 px-4 pb-20 text-foreground sm:px-8 lg:px-12">
       <div className="mx-auto max-w-7xl pt-10 sm:pt-16">
         <div className="mb-8 sb-fade-up">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.22em] text-[#f5b52e]">Quantica Digital</p>
+          <p className="mb-2 text-sm font-bold uppercase tracking-[0.22em] text-[#4a9eff]">Quantica Digital</p>
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Study Batches</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             {loading ? "Loading courses..." : `${batches.length.toLocaleString()} batches available`} · Find your course and start learning
@@ -124,7 +131,7 @@ export function HomeView() {
           </button>
         </div>
 
-        <label className="mb-6 flex h-12 items-center gap-3 rounded-2xl glass-soft px-4 text-muted-foreground focus-within:border-[#f5b52e]/50">
+        <label className="mb-6 flex h-12 items-center gap-3 rounded-2xl glass-soft px-4 text-muted-foreground focus-within:border-[#4a9eff]/50">
           <Search size={19} />
           <input
             value={searchQuery}
@@ -172,7 +179,8 @@ function BatchGrid({ batches, onOpen, onEnroll, enrolledIds, savingId }: { batch
 function BatchCard({ batch, onOpen, onEnroll, enrolled, saving }: { batch: CatalogBatch; onOpen: () => void; onEnroll: () => void; enrolled: boolean; saving: boolean }) {
   return (
     <GlassCard className="overflow-hidden rounded-3xl" hover={false} sheen={false}>
-      <button type="button" onClick={onOpen} className="group block w-full text-left">
+      <div>
+        <button type="button" onClick={onOpen} className="group block w-full text-left">
         <div className="relative aspect-[1.7] overflow-hidden bg-black/30">
           <SafeImage src={batch.previewImage} alt={batch.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
           <GlassBadge className="absolute left-3 top-3 bg-black/70 text-white" tone="neutral">{batch.language ?? "Hinglish"}</GlassBadge>
@@ -181,12 +189,15 @@ function BatchCard({ batch, onOpen, onEnroll, enrolled, saving }: { batch: Catal
           <h2 className="line-clamp-2 min-h-11 text-base font-bold text-white">{batch.name}</h2>
           <p className="line-clamp-1 text-sm text-muted-foreground">For {batch.byName || "serious learners"}</p>
           <div className="flex items-center gap-2 text-xs text-muted-foreground"><span className="rounded-full bg-white/8 px-2 py-1">{batch.type ?? "E_BATCH"}</span><span>Starts {batch.startDate ?? "Soon"}</span></div>
-          <GlassButton type="button" variant={enrolled ? "glass" : "gold"} size="sm" className="w-full" disabled={enrolled || saving} onClick={(event) => { event.stopPropagation(); onEnroll(); }}>
+        </div>
+        </button>
+        <div className="px-4 pb-4">
+          <GlassButton type="button" variant={enrolled ? "glass" : "gold"} size="sm" className="w-full" disabled={enrolled || saving} onClick={onEnroll}>
             {saving ? <Loader2 size={15} className="animate-spin" /> : enrolled ? <Check size={15} /> : <Trophy size={15} />}
             {saving ? "Saving..." : enrolled ? "Enrolled" : "Enroll now"}
           </GlassButton>
         </div>
-      </button>
+      </div>
     </GlassCard>
   );
 }

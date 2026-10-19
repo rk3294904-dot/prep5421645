@@ -15,7 +15,7 @@ export function SiteFooter() {
           <div className="flex items-center gap-3 md:w-1/3">
             <span className="w-12 h-12 rounded-2xl overflow-hidden border border-white/15 bg-black shrink-0 shadow-[0_0_20px_rgba(245,181,46,0.2)]">
               { }
-              <img src="/logo-256.png" alt="Study Bison logo" className="w-full h-full object-cover" />
+              <img src="/logo.png" alt="Study Bison logo" className="w-full h-full object-cover" />
             </span>
             <div className="leading-tight">
               <p className="text-base font-extrabold text-gold">STUDY BISON</p>
@@ -41,12 +41,12 @@ export function SiteFooter() {
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-full btn-glass px-5 h-10 text-sm font-semibold text-foreground"
             >
-              <Send size={14} className="text-[#f5b52e]" />
+              <Send size={14} className="text-[#4a9eff]" />
               Join Telegram Community
             </a>
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
               © {year} Study Bison · Crafted with
-              <Heart size={12} className="text-[#f5b52e] fill-[#f5b52e]" />
+              <Heart size={12} className="text-[#4a9eff] fill-[#4a9eff]" />
               for learners everywhere
             </p>
           </div>
@@ -60,7 +60,7 @@ function FooterLink({ onClick, children }: { onClick: () => void; children: Reac
   return (
     <button
       onClick={onClick}
-      className="text-muted-foreground hover:text-[#f8d477] transition-colors cursor-pointer"
+      className="text-muted-foreground hover:text-[#7cc0ff] transition-colors cursor-pointer"
     >
       {children}
     </button>

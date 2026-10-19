@@ -16,7 +16,8 @@ export type ViewName =
   | "topic"
   | "watch"
   | "dashboard"
-  | "about";
+  | "about"
+  | "leaderboard";
 
 export interface RouteState {
   view: ViewName;
@@ -74,6 +75,8 @@ function parseHash(hash: string): RouteState {
       return { view: "dashboard" };
     case "about":
       return { view: "about" };
+    case "leaderboard":
+      return { view: "leaderboard" };
     default:
       return { view: "home" };
   }
